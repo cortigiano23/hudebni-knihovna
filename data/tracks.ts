@@ -1,21 +1,24 @@
-    export type Track = {
-    id: string;             // unikátní ID
-    title: string;          // název skladby
-    description: string;    // popis skladby
-    bpm?: number;           // BPM skladby (volitelné)
-    tags?: string[];        // tagy / nálady (např. ["relax", "ambient"])
-    files: {                // objekt s dostupnými verzemi souborů ke stažení
-        [format: string]: string;  // např. "mp3": "snih-na-dlanich.mp3"
-    };
-    };
+export type Track = {
+  id: string;             
+  title: string;          
+  description: string;    
+  bpm?: number;           
+  tags?: string[];        
+  length?: string;        // ⬅️ délka skladby
+  style?: string;         // ⬅️ hudební styl
+  files: {                
+    [format: string]: string;  
+  };
+};
 
-
-    export const tracks: Track[] = [
+export const tracks: Track[] = [
   {
     id: "lost-in-zitomir",
     title: "Lost in Žitomir",
     description: "Hovno hovno hovno",
     bpm: 60,
+    length: "2:37",
+    style: "Piano",
     tags: ["relax", "piano", "klid"],
     files: {
       mp3: "lost-in-zitomir.mp3",
@@ -27,6 +30,8 @@
     title: "Movin 2025",
     description: "Movin, movin, movin",
     bpm: 45,
+    length: "3:12",
+    style: "Ambient",
     tags: ["ambient", "meditace", "relax"],
     files: {
       mp3: "movin.mp3",
