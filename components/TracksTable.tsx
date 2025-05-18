@@ -41,11 +41,11 @@ export default function TracksTable() {
     <div className="flex flex-col md:flex-row gap-8">
       {/* SIDEBAR FILTRY */}
       <aside className="md:w-1/4">
-        <h2 className="font-bold mb-2">Filter</h2>
+        <h2 className="font-bold mb-12">Filter</h2>
 
         {/* BPM Range */}
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">BPM Range</label>
+        <div className="mb-12">
+          <label className="block font-semibold mb-1">bpm</label>
           <div className="flex items-center gap-2">
             <input
               type="number"
@@ -74,18 +74,21 @@ export default function TracksTable() {
         {/* TAGY */}
         <div className="mb-4">
           <label className="block font-semibold mb-1">Tags</label>
-          <div className="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
-              <label key={tag} className="text-sm flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={selectedTags.includes(tag)}
-                  onChange={() => toggleTag(tag)}
-                />
-                {tag}
-              </label>
-            ))}
-          </div>
+ <div className="flex flex-col gap-1">
+  {allTags
+    .slice()
+    .sort((a, b) => a.localeCompare(b))
+    .map((tag) => (
+      <label key={tag} className="text-sm flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={selectedTags.includes(tag)}
+          onChange={() => toggleTag(tag)}
+        />
+        {tag}
+      </label>
+    ))}
+</div>
         </div>
       </aside>
 
@@ -96,7 +99,7 @@ export default function TracksTable() {
   placeholder="Search tracks..."
   value={search}
   onChange={(e) => setSearch(e.target.value)}
-  className="mb-6 w-full bg-black text-white border-0 border-b-4 border-white px-2 py-2 focus:outline-none placeholder-white font-bold"
+  className="mb-6 w-full bg-black text-white border-0 border-b-4 border-white px-2 py-2 focus:outline-none placeholder-white font-boldgi"
 />
 
         <table className="w-full border-separate border-spacing-y-2 border-spacing-x-0">
