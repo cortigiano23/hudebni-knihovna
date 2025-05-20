@@ -15,7 +15,7 @@ export default function TracksTable() {
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const tracksPerPage = 20;
+  const tracksPerPage = 50;
   const sliderRef = useRef<HTMLDivElement>(null);
 
   // Calculate pagination

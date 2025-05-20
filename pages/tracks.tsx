@@ -1,6 +1,7 @@
 import React from "react";
 import TracksTable from "../components/TracksTable";
 import Image from "next/image";
+import Footer from "@/components/Footer";
 
 export default function TracksPage() {
   return (
@@ -65,6 +66,8 @@ export default function TracksPage() {
       </div>
 
       <TracksTable />
+      
+      <Footer />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import TracksTable from "@/components/TracksTable";
 import Image from "next/image";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -50,18 +51,18 @@ export default function Home() {
           fontSize: "14px",
           lineHeight: 1.6,
           backgroundColor: "rgba(255, 255, 255, 0.05)",
-          padding: "24px",
+          padding: "23px",
           borderRadius: "8px",
           height: "300px",
           overflow: "auto"
         }}>
           <p style={{ marginBottom: "16px" }}>
-          Welcome to my music catalogue! I am a composer dedicated to creating original music for a wide variety of projects, including film scores, TV commercials, jingles, and more. 
+         Welcome! I`m Simon, a composer dedicated to creating original music for a wide variety of projects, including film scores, TV commercials, jingles, and more. 
           <br></br><br></br>
           My music is available for creators seeking the perfect soundtrack to elevate their work. Here you will find a diverse selection of my compositions, ready for download in high-quality formats. 
           <br></br><br></br>
           For licensing music for a specific project, please contact me directly via email or phone to discuss the details and secure the appropriate rights.
-          Thank you!
+          Thank you and enjoy the music!
                     </p>
           
         </div>
@@ -69,6 +70,8 @@ export default function Home() {
 
       {/* Original TracksTable section */}
       <TracksTable />
+
+      <Footer />
     </main>
   );
 }
