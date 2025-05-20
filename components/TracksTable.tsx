@@ -14,7 +14,79 @@ export default function TracksTable() {
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const tracksPerPage = 20;
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Calculate pagination
+  const indexOfLastTrack = currentPage * tracksPerPage;
+  const indexOfFirstTrack = indexOfLastTrack - tracksPerPage;
+  const currentTracks = tracks.filter((track) => {
+    const searchLower = search.toLowerCase();
+    const matchesSearch =
+      track.title.toLowerCase().includes(searchLower) ||
+      track.description.toLowerCase().includes(searchLower) ||
+      track.type?.toLowerCase().includes(searchLower) ||
+      track.form?.toLowerCase().includes(searchLower) ||
+      (track.tags?.some((tag) => tag.toLowerCase().includes(searchLower)));
+
+    const matchesBpm =
+      !track.bpm || (track.bpm >= bpmRange[0] && track.bpm <= bpmRange[1]);
+
+    const matchesType =
+      selectedTypes.length === 0 ||
+      (track.type && selectedTypes.includes(track.type));
+
+    const matchesForm =
+      selectedForms.length === 0 ||
+      (track.form && selectedForms.includes(track.form));
+
+    const matchesTags =
+      selectedTags.length === 0 ||
+      track.tags?.some((tag) => selectedTags.includes(tag));
+
+    return matchesSearch && matchesBpm && matchesType && matchesForm && matchesTags;
+  }).slice(indexOfFirstTrack, indexOfLastTrack);
+  const totalPages = Math.ceil(tracks.filter((track) => {
+    const searchLower = search.toLowerCase();
+    const matchesSearch =
+      track.title.toLowerCase().includes(searchLower) ||
+      track.description.toLowerCase().includes(searchLower) ||
+      track.type?.toLowerCase().includes(searchLower) ||
+      track.form?.toLowerCase().includes(searchLower) ||
+      (track.tags?.some((tag) => tag.toLowerCase().includes(searchLower)));
+
+    const matchesBpm =
+      !track.bpm || (track.bpm >= bpmRange[0] && track.bpm <= bpmRange[1]);
+
+    const matchesType =
+      selectedTypes.length === 0 ||
+      (track.type && selectedTypes.includes(track.type));
+
+    const matchesForm =
+      selectedForms.length === 0 ||
+      (track.form && selectedForms.includes(track.form));
+
+    const matchesTags =
+      selectedTags.length === 0 ||
+      track.tags?.some((tag) => selectedTags.includes(tag));
+
+    return matchesSearch && matchesBpm && matchesType && matchesForm && matchesTags;
+  }).length / tracksPerPage);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, bpmRange, selectedTypes, selectedForms, selectedTags]);
+
+  const clearAllFilters = () => {
+    setSearch("");
+    setBpmRange([0, 250]);
+    setSelectedTypes([]);
+    setSelectedForms([]);
+    setSelectedTags([]);
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -73,34 +145,6 @@ export default function TracksTable() {
     };
   }, [isDragging, bpmRange]);
 
-  // Filter tracks based on all criteria
-  const filteredTracks = tracks.filter((track) => {
-    const searchLower = search.toLowerCase();
-    const matchesSearch =
-      track.title.toLowerCase().includes(searchLower) ||
-      track.description.toLowerCase().includes(searchLower) ||
-      track.type?.toLowerCase().includes(searchLower) ||
-      track.form?.toLowerCase().includes(searchLower) ||
-      (track.tags?.some((tag) => tag.toLowerCase().includes(searchLower)));
-
-    const matchesBpm =
-      !track.bpm || (track.bpm >= bpmRange[0] && track.bpm <= bpmRange[1]);
-
-    const matchesType =
-      selectedTypes.length === 0 ||
-      (track.type && selectedTypes.includes(track.type));
-
-    const matchesForm =
-      selectedForms.length === 0 ||
-      (track.form && selectedForms.includes(track.form));
-
-    const matchesTags =
-      selectedTags.length === 0 ||
-      track.tags?.some((tag) => selectedTags.includes(tag));
-
-    return matchesSearch && matchesBpm && matchesType && matchesForm && matchesTags;
-  });
-
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
@@ -121,7 +165,24 @@ export default function TracksTable() {
     <div className="container">
       {/* Sidebar */}
       <aside className="sidebar">
-        <h2>Filter</h2>
+        <div style={{ marginBottom: '2rem' }}>
+          <h2 style={{ marginBottom: '0.25rem' }}>Filter ({currentTracks.length}/{tracks.length})</h2>
+          <button 
+            onClick={clearAllFilters}
+            style={{
+              fontSize: '0.875rem',
+              color: '#999',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              textDecoration: 'underline',
+              display: 'block'
+            }}
+          >
+            Clear all
+          </button>
+        </div>
 
         {/* BPM Range */}
         <div style={{ marginBottom: '3rem' }}>
@@ -286,7 +347,7 @@ export default function TracksTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredTracks.map((track) => (
+            {currentTracks.map((track) => (
               <tr key={track.id}>
                 <td>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
@@ -379,6 +440,50 @@ export default function TracksTable() {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination Controls */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          gap: '1rem',
+          marginTop: '2rem',
+          marginBottom: '1rem'
+        }}>
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: currentPage === 1 ? '#333' : '#666',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Previous
+          </button>
+          
+          <span style={{ color: '#999' }}>
+            Page {currentPage} of {totalPages}
+          </span>
+          
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: currentPage === totalPages ? '#333' : '#666',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Next
+          </button>
+        </div>
 
         {playingTrackId && (
           <div style={{ marginTop: '1rem' }}>

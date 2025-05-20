@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function HeaderSection() {
   return (
@@ -17,9 +18,11 @@ export default function HeaderSection() {
         borderRadius: '0.5rem',
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
       }}>
-        <img 
-          src="/simon1.jpg" 
+        <Image
+          src="/simon1.jpg?v=2"
           alt="Simon Dvorsky"
+          width={400}
+          height={400}
           style={{
             width: '100%',
             height: '100%',

@@ -1,11 +1,12 @@
 import React from "react";
 import TracksTable from "@/components/TracksTable";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <main className="bg-black text-white min-h-screen">
       <header className="site-header">
-        <h1>simon dvorsky | my music catalogue</h1>
+        <h1>simon dvorsky |  my music catalogue</h1>
         <hr className="header-line" />
       </header>
 
@@ -29,9 +30,11 @@ export default function Home() {
             borderRadius: "8px",
             overflow: "hidden"
           }}>
-            <img 
-              src="/simon1.jpg"
+            <Image
+              src="/simon1.jpg?v=2"
               alt="Simon Dvorsky"
+              width={300}
+              height={300}
               style={{
                 width: "100%",
                 height: "100%",

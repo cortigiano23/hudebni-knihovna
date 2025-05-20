@@ -1,5 +1,6 @@
 import React from "react";
 import TracksTable from "../components/TracksTable";
+import Image from "next/image";
 
 export default function TracksPage() {
   return (
@@ -38,16 +39,12 @@ export default function TracksPage() {
           overflow: "hidden",
           border: "5px solid black"
         }}>
-          <img 
-            src="/simon1.jpg"
+          <Image
+            src="/simon1.jpg?v=2"
             alt="Simon Dvorsky"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-              border: "5px solid white"
-            }}
+            width={300}
+            height={300}
+            style={{ borderRadius: '50%' }}
           />
         </div>
         <div style={{ 
