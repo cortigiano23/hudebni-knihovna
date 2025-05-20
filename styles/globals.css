@@ -1,26 +1,284 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Site header */
+.site-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  position: relative;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.site-header .header-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 1);
+}
+
+/* Layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    gap: 0;
+    padding: 2rem 2rem 2rem 6rem;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  width: 100%;
+  padding-top: 4.5rem;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+  }
+}
+
+.sidebar h2 {
+  font-weight: 600;
+  margin-bottom: 3rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Form elements */
+input[type="text"],
+input[type="number"] {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #404040;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+input[type="text"] {
+  width: 100%;
+  border: none;
+  border-bottom: 4px solid #ffffff;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+input[type="text"]::placeholder {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+/* Table */
+.table-container {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .table-container {
+    width: calc(100% - 280px - 4rem);
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #404040;
+  text-align: left;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+th {
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 0.5rem;
+}
+
+/* Title column */
+td:first-child, th:first-child {
+  width: 22%;
+  white-space: normal;
+}
+
+/* Description column */
+td:nth-child(2), th:nth-child(2) {
+  width: 16%;
+  white-space: normal;
+}
+
+/* Length and BPM columns */
+td:nth-child(3), th:nth-child(3),
+td:nth-child(4), th:nth-child(4) {
+  width: 11%;
+  text-align: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Style column */
+td:nth-child(5), th:nth-child(5) {
+  width: 10%;
+}
+
+/* Tags column */
+td:nth-child(6), th:nth-child(6) {
+  width: 10%;
+  white-space: normal;
+}
+
+/* Download column */
+td:last-child, th:last-child {
+  width: 20%;
+  text-align: right;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+td {
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Download buttons container */
+td:last-child > div {
+  display: inline-flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  min-width: 100%;
+}
+
+/* Play button and title layout */
+.play-button {
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.title-text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Title column content */
+td:first-child > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Ensure title text is visible */
+td:first-child span {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  background-color: #404040;
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.25rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Buttons */
+.download-button {
+  background-color: #2563eb;
+  color: #ffffff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.download-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Audio player */
+audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+  accent-color: #2563eb;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+}
+
+/* BPM inputs container */
+.bpm-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bpm-inputs input {
+  width: 4rem;
 }
