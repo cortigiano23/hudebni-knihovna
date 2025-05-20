@@ -1,54 +1,73 @@
-import React, { useState } from "react";
-import { tracks, Track } from "../data/tracks";
+import React from "react";
+import TracksTable from "../components/TracksTable";
 
 export default function TracksPage() {
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-6">Hudební katalog</h1>
+    <>
+      <div style={{
+        backgroundColor: "green",
+        padding: "20px",
+        marginBottom: "20px"
+      }}>
+        TEST ELEMENT - IF YOU SEE THIS, THE PAGE IS RENDERING
+      </div>
 
-      <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
-        <thead className="bg-gray-200 text-left">
-          <tr>
-            <th className="py-3 px-4">Název</th>
-            <th className="py-3 px-4">Popis</th>
-            <th className="py-3 px-4">BPM</th>
-            <th className="py-3 px-4">Tagy</th>
-            <th className="py-3 px-4">Stáhnout</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tracks.map((track: Track) => (
-            <tr key={track.id} className="border-t hover:bg-gray-50">
-              <td className="py-3 px-4 font-semibold">{track.title}</td>
-              <td className="py-3 px-4 text-gray-700">{track.description}</td>
-              <td className="py-3 px-4">{track.bpm ?? "-"}</td>
-              <td className="py-3 px-4">
-                {track.tags?.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-block bg-gray-300 text-gray-700 text-xs rounded-full px-2 py-0.5 mr-1"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </td>
-              <td className="py-3 px-4 flex gap-2">
-                {Object.entries(track.files).map(([format, filename]) => (
-                  <a
-                    key={format}
-                    href={`/audio/${filename}`}
-                    download={filename}
-                    title={`Stáhnout ${format.toUpperCase()}`}
-                    className="bg-blue-600 text-white rounded px-3 py-1 hover:bg-blue-700 text-sm"
-                  >
-                    {format.toUpperCase()}
-                  </a>
-                ))}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </main>
+      <h1 style={{ 
+        fontSize: "24px", 
+        fontWeight: "bold", 
+        marginBottom: "24px",
+        backgroundColor: "purple",
+        padding: "10px",
+        color: "white"
+      }}>
+        Hudební katalog
+      </h1>
+      
+      <div style={{ 
+        display: "flex", 
+        gap: "32px", 
+        marginBottom: "32px",
+        backgroundColor: "orange",
+        padding: "20px"
+      }}>
+        <div style={{ 
+          width: "400px", 
+          height: "400px", 
+          backgroundColor: "yellow",
+          borderRadius: "8px",
+          overflow: "hidden",
+          border: "5px solid black"
+        }}>
+          <img 
+            src="/simon1.jpg"
+            alt="Simon Dvorsky"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              border: "5px solid white"
+            }}
+          />
+        </div>
+        <div style={{ 
+          flex: 1,
+          fontSize: "16px",
+          lineHeight: 1.6,
+          backgroundColor: "pink",
+          padding: "20px",
+          color: "black"
+        }}>
+          <p style={{ marginBottom: "16px" }}>
+            I am a Czech music composer/producer born in Prague in 1980, who has been composing music for both commercials as well as non-commercial projects. I have been making music for movies, ads, TV... and I also write and produce music for bands and musicians including my own band U-Prag settled pretty well on the Czech electronic music scene since 2002.
+          </p>
+          <p>
+            This site is meant to present various music I have made during the past years as a composer. I am proud to show you my work for clients such as Hyundai, Toyota, KIA, Mitsubishi, Vitra, FIO banka, Milka, and many others as well as music made just for listening or dancing and also scores for movies, TV and various other visuals. Hope you will enjoy it!
+          </p>
+        </div>
+      </div>
+
+      <TracksTable />
+    </>
   );
 }

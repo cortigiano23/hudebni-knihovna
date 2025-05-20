@@ -232,7 +232,7 @@ td:nth-child(6), th:nth-child(6) {
 /* Download column */
 td:last-child, th:last-child {
   width: 20%;
-  text-align: right;
+  text-align: center;
   white-space: nowrap;
   overflow: visible;
 }
@@ -294,7 +294,7 @@ td:first-child span {
 
 /* Buttons */
 .download-button {
-  background-color: #2563eb;
+  background-color: #000000;
   color: #ffffff;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
@@ -304,10 +304,12 @@ td:first-child span {
   font-weight: 500;
   letter-spacing: -0.01em;
   transition: background-color 0.2s ease;
+  border: 1px solid #ffffff;
 }
 
 .download-button:hover {
-  background-color: #1d4ed8;
+  background-color: #2563eb;
+  border-color: #2563eb;
 }
 
 /* Audio player */
