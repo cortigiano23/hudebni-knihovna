@@ -1,0 +1,23 @@
+﻿id;title;description;bpm;length;type;tags;mp3;wav;form
+1;Lost in Žitomir;Piano song with strings;80;3:30;sondtrack;instrumental, atmospheric;lost-in-zitomir.mp3;lost-in-zitomir.wav;instrumental
+2;Movin;Instrumental atmosphere;90;4:58;sondtrack;background music;movin.mp3;;instrumental
+3;Expectations;U-Prag song;150;;electronic;instrumental, evolving, piano, strings;Expectations.mp3;;instrumental
+4;Happy to Have You Back;Modern dance;120;;complete song;voice, dance, kick;Happy-to-Have-You-Back.mp3;02_Happy-to-Have-You-Back.wav;voice
+5;Infinite;Deep atmo;90;5:36;soundtrack;dark, emotional;Infinite.mp3;;instrumental
+6;Symphony for Ourselves;Strings;120;6:36;soundtrack;instrumental, strings;Symphony-for-Ourselves.mp3;;instrumental
+7;Motionless;Instrumental strings;120;7:36;soundtrack;instrumental, strings;Motionless.mp3;;instrumental
+8;Moravia;Alternative electro;130;8:36;dance;instrumental, electronic, dance, piano;Moravia.mp3;;instrumental
+9;Every Single Soul;Hit with voice;165;9:36;dnb;voice, piano, hit;every-single-soul.mp3;;voice
+10;Seconds of Life;Hit with voice;120;10:36;complete song;voice, piano,;seconds-of-life.mp3;;voice
+11;Sokol;Czech rap;120;11:36;complete song;rap, česky, voice;sokol.mp3;;voice
+12;Prelude;Atmosphere;110;12:36;soundtrack;instrumental, piano, emotional;prelude.mp3;;instrumental
+13;Icebreaker;Dance nabger;120;13:36;dance;instrumental, dance, beat;icebreaker.mp3;;instrumental
+14;Perspective;Straightforward;160;14:36;complete song;guitar, voice, massive;perspective.mp3;;voice
+15;Guily Pleasure;Instrumental strings;120;15:36;soundtrack;instrumental, strings, soundtrack, film;guilty-pleasure.mp3;;instrumental
+16;If Only;Dance instrumental;130;16:36;breakbeat;instrumental, dance,;if-only.mp3;;instrumental
+17;All Good Things;Slow cool song;120;17:36;complete song;voice, atmospheric;all-good-things.mp3;;voice
+18;Kra;Czech rap;120;18:36;complete song;rap, česky, voice;kra.mp3;;voice
+19;Summer Funk;Summer feel;140;2:31;funky;instrumental, guitar, positive, cool;summer-funk.mp3;;instrumental
+20;XXX;Test 1;70;4:56;dnb;instrumental, jingle;xxx.mp3;;instrumental
+21;XX1;Test 2;50;4:45;dnb;short;xx1.mp3;;instrumental
+22;XX2;Test 3;190;3:25;dnb;background music;xx2.mp3;;instrumental

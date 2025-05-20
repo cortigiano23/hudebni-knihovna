@@ -2,25 +2,38 @@
 
 import { useState, useRef, useEffect } from "react";
 import { tracks } from "@/data/tracks";
+import { Track } from '../data/tracks';
 
 export default function TracksTable() {
   const [search, setSearch] = useState("");
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const [bpmRange, setBpmRange] = useState<[number, number]>([0, 250]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Get all unique tags and styles
   const allTags = Array.from(new Set(tracks.flatMap((track) => track.tags ?? [])));
   const allStyles = Array.from(
     new Set(
       tracks
-        .map((track) => track.style)
-        .filter((style): style is string => style !== undefined)
+        .map((track) => track.type)
+        .filter((type): type is string => type !== undefined)
     )
   );
+
+  // Get unique types, forms, and tags
+  const uniqueTypes = Array.from(new Set(tracks.map(track => track.type).filter(Boolean) as string[]));
+  const uniqueForms = Array.from(new Set(tracks.map(track => track.form).filter(Boolean) as string[]));
+  const uniqueTags = Array.from(new Set(tracks.flatMap(track => track.tags || [])));
 
   const handleMouseDown = (e: React.MouseEvent, type: 'min' | 'max') => {
     e.preventDefault();
@@ -66,21 +79,26 @@ export default function TracksTable() {
     const matchesSearch =
       track.title.toLowerCase().includes(searchLower) ||
       track.description.toLowerCase().includes(searchLower) ||
-      track.style?.toLowerCase().includes(searchLower) ||
+      track.type?.toLowerCase().includes(searchLower) ||
+      track.form?.toLowerCase().includes(searchLower) ||
       (track.tags?.some((tag) => tag.toLowerCase().includes(searchLower)));
 
     const matchesBpm =
       !track.bpm || (track.bpm >= bpmRange[0] && track.bpm <= bpmRange[1]);
 
+    const matchesType =
+      selectedTypes.length === 0 ||
+      (track.type && selectedTypes.includes(track.type));
+
+    const matchesForm =
+      selectedForms.length === 0 ||
+      (track.form && selectedForms.includes(track.form));
+
     const matchesTags =
       selectedTags.length === 0 ||
       track.tags?.some((tag) => selectedTags.includes(tag));
 
-    const matchesStyles =
-      selectedStyles.length === 0 ||
-      (track.style && selectedStyles.includes(track.style));
-
-    return matchesSearch && matchesBpm && matchesTags && matchesStyles;
+    return matchesSearch && matchesBpm && matchesType && matchesForm && matchesTags;
   });
 
   const toggleTag = (tag: string) => {
@@ -94,6 +112,10 @@ export default function TracksTable() {
       prev.includes(style) ? prev.filter((s) => s !== style) : [...prev, style]
     );
   };
+
+  if (!isClient) {
+    return null; // or a loading state
+  }
 
   return (
     <div className="container">
@@ -171,19 +193,51 @@ export default function TracksTable() {
 
         {/* Styles */}
         <div style={{ marginBottom: '3rem' }}>
-          <label>Style</label>
+          <label>Type</label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-            {allStyles
+            {uniqueTypes
               .slice()
-              .sort((a, b) => a.localeCompare(b))
-              .map((style) => (
-                <label key={style} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              .sort((a, b) => (a || '').localeCompare(b || ''))
+              .map((type) => (
+                <label key={type} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <input
                     type="checkbox"
-                    checked={selectedStyles.includes(style)}
-                    onChange={() => toggleStyle(style)}
+                    checked={selectedTypes.includes(type)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedTypes([...selectedTypes, type]);
+                      } else {
+                        setSelectedTypes(selectedTypes.filter(t => t !== type));
+                      }
+                    }}
                   />
-                  {style}
+                  {type}
+                </label>
+              ))}
+          </div>
+        </div>
+
+        {/* Forms */}
+        <div style={{ marginBottom: '3rem' }}>
+          <label>Form</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            {uniqueForms
+              .slice()
+              .sort((a, b) => (a || '').localeCompare(b || ''))
+              .map(form => (
+                <label key={form} style={{ fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedForms.includes(form)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedForms([...selectedForms, form]);
+                      } else {
+                        setSelectedForms(selectedForms.filter(f => f !== form));
+                      }
+                    }}
+                  />
+                  {form}
                 </label>
               ))}
           </div>
@@ -225,10 +279,10 @@ export default function TracksTable() {
               <th>Title</th>
               <th>Description</th>
               <th>Length</th>
-              <th>BPM</th>
-              <th>Style</th>
-              <th>Tags</th>
-              <th>Download</th>
+              <th style={{ width: '45px' }}>BPM</th>
+              <th style={{ width: '100px' }}>Type</th>
+              <th style={{ width: '120px' }}>Tags</th>
+              <th style={{ width: '150px' }}>Download</th>
             </tr>
           </thead>
           <tbody>
@@ -236,7 +290,7 @@ export default function TracksTable() {
               <tr key={track.id}>
                 <td>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
-                    {track.files.mp3 && (
+                    {(track.files.mp3 || track.files.wav) && (
                       <button
                         onClick={() =>
                           setPlayingTrackId(playingTrackId === track.id ? null : track.id)
@@ -284,16 +338,29 @@ export default function TracksTable() {
                 </td>
                 <td>{track.description}</td>
                 <td>{track.length ?? "-"}</td>
-                <td>{track.bpm ?? "-"}</td>
-                <td>{track.style ?? "-"}</td>
-                <td>
-                  {track.tags?.map((tag) => (
-                    <span key={tag} className="tag">
+                <td style={{ width: '45px' }}>{track.bpm ?? "-"}</td>
+                <td style={{ fontSize: '0.65rem', width: '100px' }}>{track.type ?? "-"}</td>
+                <td style={{ 
+                  backgroundColor: '#1a1a1a',
+                  width: '120px'
+                }}>
+                  {track.tags?.slice(0, 3).map((tag) => (
+                    <span key={tag} className="tag" style={{ 
+                      fontSize: '0.65rem',
+                      background: 'none',
+                      padding: '0 0.25rem',
+                      color: '#999'
+                    }}>
                       {tag}
                     </span>
                   ))}
+                  {track.tags && track.tags.length > 3 && (
+                    <span style={{ fontSize: '0.65rem', color: '#666', marginLeft: '0.25rem' }}>
+                      ...
+                    </span>
+                  )}
                 </td>
-                <td>
+                <td style={{ width: '150px' }}>
                   <div style={{ display: 'inline-flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                     {Object.entries(track.files).map(([format, filename]) => (
                       <a
@@ -318,9 +385,10 @@ export default function TracksTable() {
             <audio
               controls
               autoPlay
-              src={`/audio/${
-                tracks.find((t) => t.id === playingTrackId)?.files.mp3
-              }`}
+              src={`/audio/${(() => {
+                const t = tracks.find((t) => t.id === playingTrackId);
+                return t?.files.mp3 || t?.files.wav;
+              })()}`}
             >
               Your browser does not support the audio element.
             </audio>

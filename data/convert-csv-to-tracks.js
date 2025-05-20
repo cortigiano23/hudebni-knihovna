@@ -10,10 +10,10 @@ const csvData = fs.readFileSync(csvFile, 'utf-8');
 
 function parseCSV(data) {
   const lines = data.trim().split('\n');
-  const headers = lines[0].split(',');
+  const headers = lines[0].split(';').map(h => h.trim());
 
   const tracks = lines.slice(1).map(line => {
-    const values = line.split(',');
+    const values = line.split(';').map(v => v.trim().replace(/\r$/, ''));
     const track = {};
     headers.forEach((header, i) => {
       track[header] = values[i];
@@ -23,20 +23,24 @@ function parseCSV(data) {
   return tracks;
 }
 
-const tracks = parseCSV(csvData).map(track => {
+const parsedTracks = parseCSV(csvData);
+console.log('Parsed CSV data:', parsedTracks);
+
+const tracks = parsedTracks.map(track => {
   // zpracuj tagy do pole
-  const tags = track.tags ? track.tags.split(';').map(t => t.trim()) : [];
+  const tags = track.tags ? track.tags.split(',').map(t => t.trim()) : [];
   return {
     id: track.id,
     title: track.title,
     description: track.description,
     bpm: track.bpm ? Number(track.bpm) : undefined,
     length: track.length,
-    style: track.style,
+    type: track.type || track.style, // try both type and style fields
+    form: track.form,
     tags,
     files: {
-      mp3: track.mp3,
-      wav: track.wav,
+      mp3: track.mp3 || undefined,
+      wav: track.wav || undefined,
     },
   };
 });
@@ -47,7 +51,8 @@ const tsContent = `export type Track = {
   description: string;
   bpm?: number;
   length?: string;
-  style?: string;
+  type?: string;
+  form?: string;
   tags?: string[];
   files: { [format: string]: string };
 };

@@ -232,7 +232,7 @@ td:nth-child(6), th:nth-child(6) {
 /* Download column */
 td:last-child, th:last-child {
   width: 20%;
-  text-align: center;
+  text-align: right;
   white-space: nowrap;
   overflow: visible;
 }
