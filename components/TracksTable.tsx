@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { tracks } from "@/data/tracks";
 
 export default function TracksTable() {
   const [search, setSearch] = useState("");
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
-  const [bpmRange, setBpmRange] = useState<[number, number]>([0, 200]);
+  const [bpmRange, setBpmRange] = useState<[number, number]>([0, 250]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+  const [isDragging, setIsDragging] = useState<'min' | 'max' | null>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   // Get all unique tags and styles
   const allTags = Array.from(new Set(tracks.flatMap((track) => track.tags ?? [])));
@@ -19,6 +21,44 @@ export default function TracksTable() {
         .filter((style): style is string => style !== undefined)
     )
   );
+
+  const handleMouseDown = (e: React.MouseEvent, type: 'min' | 'max') => {
+    e.preventDefault();
+    setIsDragging(type);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !sliderRef.current) return;
+
+    const slider = sliderRef.current;
+    const rect = slider.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const percentage = x / rect.width;
+    const value = Math.round(percentage * 250);
+
+    if (isDragging === 'min') {
+      const newMin = Math.min(value, bpmRange[1] - 1);
+      setBpmRange([newMin, bpmRange[1]]);
+    } else {
+      const newMax = Math.max(value, bpmRange[0] + 1);
+      setBpmRange([bpmRange[0], newMax]);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(null);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, bpmRange]);
 
   // Filter tracks based on all criteria
   const filteredTracks = tracks.filter((track) => {
@@ -64,26 +104,68 @@ export default function TracksTable() {
         {/* BPM Range */}
         <div style={{ marginBottom: '3rem' }}>
           <label>bpm</label>
-          <div className="bpm-inputs">
-            <input
-              type="number"
-              min={0}
-              max={bpmRange[1]}
-              value={bpmRange[0]}
-              onChange={(e) =>
-                setBpmRange([+e.target.value, bpmRange[1]])
-              }
+          <div 
+            ref={sliderRef}
+            className="dual-range-slider"
+            style={{ 
+              position: 'relative',
+              height: '2px',
+              background: '#404040',
+              marginTop: '1rem',
+              marginBottom: '1rem',
+              width: '100%',
+              maxWidth: '180px',
+              cursor: 'pointer'
+            }}
+          >
+            <div
+              className="range-track"
+              style={{
+                position: 'absolute',
+                height: '100%',
+                background: '#ffffff',
+                left: `${(bpmRange[0] / 250) * 100}%`,
+                right: `${100 - (bpmRange[1] / 250) * 100}%`
+              }}
             />
-            <span>–</span>
-            <input
-              type="number"
-              min={bpmRange[0]}
-              max={300}
-              value={bpmRange[1]}
-              onChange={(e) =>
-                setBpmRange([bpmRange[0], +e.target.value])
-              }
+            <div
+              className="range-thumb min"
+              style={{
+                position: 'absolute',
+                width: '12px',
+                height: '12px',
+                background: '#ffffff',
+                borderRadius: '50%',
+                left: `${(bpmRange[0] / 250) * 100}%`,
+                transform: 'translate(-50%, -50%)',
+                top: '50%',
+                cursor: 'pointer',
+                zIndex: 1,
+                touchAction: 'none'
+              }}
+              onMouseDown={(e) => handleMouseDown(e, 'min')}
             />
+            <div
+              className="range-thumb max"
+              style={{
+                position: 'absolute',
+                width: '12px',
+                height: '12px',
+                background: '#ffffff',
+                borderRadius: '50%',
+                left: `${(bpmRange[1] / 250) * 100}%`,
+                transform: 'translate(-50%, -50%)',
+                top: '50%',
+                cursor: 'pointer',
+                zIndex: 1,
+                touchAction: 'none'
+              }}
+              onMouseDown={(e) => handleMouseDown(e, 'max')}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', maxWidth: '180px' }}>
+            <span>{bpmRange[0]}</span>
+            <span>{bpmRange[1]}</span>
           </div>
         </div>
 
