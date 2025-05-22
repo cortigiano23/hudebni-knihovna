@@ -366,13 +366,22 @@ export default function TracksTable() {
                           background: 'none',
                           border: 'none',
                           padding: 0,
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          position: 'relative',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.backgroundColor = '#2563eb';
+                          e.currentTarget.style.borderRadius = '50%';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
                         }}
                       >
                         {playingTrackId === track.id ? (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="white"
+                            fill="#2563eb"
                             viewBox="0 0 24 24"
                             width="20"
                             height="20"
