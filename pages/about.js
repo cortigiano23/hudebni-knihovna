@@ -126,7 +126,7 @@ export default function About() {
               overflow: "hidden"
             }}>
               <Image
-                src="/simon3.jpg?v=2"
+                src="/simon3.JPG"
                 alt="Simon Dvorsky"
                 width={800}
                 height={600}
